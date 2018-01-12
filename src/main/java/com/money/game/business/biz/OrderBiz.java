@@ -38,9 +38,9 @@ public class OrderBiz {
     @Autowired
     private PaymentService paymentService;
 
-    public ResponseData createOrder(OrderDto dto) {
-        log.info("创建订单,dto={}", dto);
-        AccountEntity accountEntity = accountService.findByUserOid(dto.getUserOid());
+    public ResponseData createOrder(String userId,OrderDto dto) {
+        log.info("创建订单,userId={},dto={}",userId, dto);
+        AccountEntity accountEntity = accountService.findByUserOid(userId);
         if (accountEntity.getBalance().compareTo(dto.getAmount()) < 0) {
             throw new BizException(ErrorEnum.ACCOUNT_BALANCE_TOO_LITTLE);
         }
@@ -49,15 +49,15 @@ public class OrderBiz {
         if (!DictEnum.GAME_STATUS_01.getCode().equals(gameEntity.getStatus())) {
             throw new BizException(ErrorEnum.GAME_START);
         }
-        CreateOrderVo vo = doOrder(dto, accountEntity, gameEntity);
+        CreateOrderVo vo = doOrder(userId,dto, accountEntity, gameEntity);
         log.info("创建订单结束,vo={}", vo);
         return ResponseData.success(vo);
     }
 
-    private CreateOrderVo doOrder(OrderDto dto, AccountEntity accountEntity, GameEntity gameEntity) {
+    private CreateOrderVo doOrder(String userId,OrderDto dto, AccountEntity accountEntity, GameEntity gameEntity) {
 
         //创建订单
-        OrderEntity orderEntity = orderService.initOrder(accountEntity.getOid(), dto.getUserOid(), dto.getGameId(), dto.getAmount(), dto.getOperation());
+        OrderEntity orderEntity = orderService.initOrder(accountEntity.getOid(), userId, dto.getGameId(), dto.getAmount(), dto.getOperation());
         orderService.save(orderEntity);
         //增加资金池
         gameEntity.setFundingPool(gameEntity.getFundingPool().add(dto.getAmount()));
@@ -65,7 +65,7 @@ public class OrderBiz {
         //计算赔率
         CreateOrderVo createOrderVo = calcProbability(dto, gameEntity);
         //增加交易明细
-        PaymentEntity paymentEntity = paymentService.initPayment(accountEntity.getOid(), dto.getUserOid(), DictEnum.TRADE_TYPE_04.getCode(),
+        PaymentEntity paymentEntity = paymentService.initPayment(accountEntity.getOid(), userId, DictEnum.TRADE_TYPE_04.getCode(),
                 orderEntity.getOrderNo(), DictEnum.PAY_STATUS_03.getCode(), DictEnum.PAY_DIRECTION_02.getCode(), dto.getAmount());
         paymentEntity.setGameId(gameEntity.getOid());
         paymentService.save(paymentEntity);

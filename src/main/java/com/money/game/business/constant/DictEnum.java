@@ -62,6 +62,10 @@ public enum DictEnum {
     ORDER_STATUS_01("01", "已投注"),
     ORDER_STATUS_02("02", "已完成"),
 
+
+    SMS_SWITCH_ON("on","短信开关开"),
+    SMS_SWITCH_OFF("off","短信开关关"),
+
     PAY_NO_PREFIX("1", "交易流水前缀"),
     ORDER_NO_PREFIX("2", "订单流水前缀"),
     ACCOUNT_NO_PREFIX("AC", "资金账号前缀");

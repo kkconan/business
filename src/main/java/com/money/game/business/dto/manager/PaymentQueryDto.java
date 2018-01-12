@@ -22,6 +22,10 @@ public class PaymentQueryDto implements Serializable{
      */
     private Integer currentPage = 1;
 
+    /**
+     * 用户id
+     */
+    private String userOid;
 
     /**
      * 账户号

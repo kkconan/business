@@ -8,7 +8,6 @@ import com.money.game.business.dto.manager.PaymentQueryDto;
 import com.money.game.business.entity.PaymentEntity;
 import com.money.game.business.exception.BizException;
 import com.money.game.business.service.PaymentService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,7 +27,6 @@ import java.util.List;
  *         2018/1/5 11:25
  **/
 @Service
-@Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
@@ -78,6 +76,9 @@ public class PaymentServiceImpl implements PaymentService {
     private Specification<PaymentEntity> buildSpecification(final PaymentQueryDto dto) {
         Specification<PaymentEntity> spec = (root, query, cb) -> {
             List<Predicate> bigList = new ArrayList<Predicate>();
+            if (StringUtils.isNotEmpty(dto.getUserOid())) {
+                bigList.add(cb.equal(root.get("userOid").as(String.class), dto.getUserOid()));
+            }
             if (StringUtils.isNotEmpty(dto.getPayNo())) {
                 bigList.add(cb.equal(root.get("payNo").as(String.class), dto.getPayNo()));
             }

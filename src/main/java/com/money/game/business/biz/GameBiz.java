@@ -265,5 +265,4 @@ public class GameBiz {
         }
         throw new BizException(ErrorEnum.MARKEY_INFO_FAIL);
     }
-
 }

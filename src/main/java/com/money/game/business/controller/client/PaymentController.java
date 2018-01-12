@@ -3,6 +3,7 @@ package com.money.game.business.controller.client;
 import com.money.game.business.biz.PaymentBiz;
 import com.money.game.business.controller.BaseController;
 import com.money.game.business.dto.client.PaymentDepositDto;
+import com.money.game.business.dto.manager.PaymentQueryDto;
 import com.money.game.core.constant.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -49,4 +50,18 @@ public class PaymentController extends BaseController {
         String userId = this.getLoginUser();
         return paymentBiz.withDraw(userId, dto.getAmount());
     }
+
+    /**
+     * 列表
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @ApiOperation(value = "列表", notes = "", httpMethod = "POST")
+    @ApiImplicitParams({@ApiImplicitParam(name = "dto", value = "列表参数", required = true, paramType = "body", dataType = "PaymentQueryDto")})
+    @ResponseBody
+    public ResponseData list(@Valid @RequestBody PaymentQueryDto dto) {
+        String userid = this.getLoginUser();
+        dto.setUserOid(userid);
+        return paymentBiz.list(dto);
+    }
+
 }

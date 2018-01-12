@@ -17,14 +17,17 @@ public enum ErrorEnum {
     USER_PWD_FAIL("1006", "密码错误"),
     USER_NOT_FORBIDDEN("1007", "账号已冻结"),
 
-    MARKEY_INFO_FAIL("1007", "获取市场行情失败"),
+    MARKEY_INFO_FAIL("1008", "获取市场行情失败"),
 
-    ACCOUNT_BALANCE_TOO_LITTLE("1008", "余额不足"),
-
-    GAME_START("1009", "游戏已开始或者已结束"),
+    ACCOUNT_BALANCE_TOO_LITTLE("1009", "余额不足"),
 
     RECOLD_NOT_FOUND("1010","记录不存在"),
 
+    SMS_CONTEXT_ERROR("1011","无效的短信内容"),
+    SMS_CODE_ERROR("1012","生成验证码失败"),
+    SMS_CODE_CHECK_FAIL("1013","无效的验证码"),
+
+    GAME_START("1014", "游戏已开始或者已结束"),
 
     SYSTEM_ERROR("-1", "系统异常");
 

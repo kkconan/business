@@ -13,10 +13,6 @@ import java.math.BigDecimal;
 @Data
 public class OrderDto implements Serializable {
     private static final long serialVersionUID = 6710397738021682209L;
-
-    @ApiModelProperty(value = "用户id")
-    private String userOid;
-
     @ApiModelProperty(value = "订单金额")
     private BigDecimal amount;
 

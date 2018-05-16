@@ -78,13 +78,18 @@ public class GameServiceImpl implements GameService {
         return gameDao.findAll(buildSpecification(dto), pageable);
     }
 
+    @Override
+    public GameEntity findByDoConut(String type,Integer doCount) {
+        return gameDao.findByDoConut(type,doCount);
+    }
+
 
     private Specification<GameEntity> buildSpecification(QueryGameDto dto) {
         Specification<GameEntity> spec = (root, query, cb) -> {
             List<Predicate> bigList = new ArrayList<Predicate>();
-            bigList.add(cb.or(cb.equal(root.get("status").as(String.class), DictEnum.GAME_STATUS_01.getCode()), cb.equal(root.get("status").as(String.class), DictEnum.GAME_STATUS_02.getCode())));
+            bigList.add(cb.equal(root.get("status").as(String.class), DictEnum.GAME_STATUS_01.getCode()));
             bigList.add(cb.equal(root.get("type").as(String.class), dto.getType()));
-            bigList.add(cb.greaterThanOrEqualTo(root.get("endTime").as(Timestamp.class), new Timestamp(new Date().getTime())));
+            bigList.add(cb.greaterThanOrEqualTo(root.get("endTime").as(Timestamp.class), new Timestamp(System.currentTimeMillis())));
 
             query.where(cb.and(bigList.toArray(new Predicate[bigList.size()])));
             // 条件查询

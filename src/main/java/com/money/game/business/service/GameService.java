@@ -40,4 +40,9 @@ public interface GameService {
      * 分页查询有效的记录(进行中和未开始)
      */
     Page<GameEntity> findAllEffectGame(QueryGameDto dto);
+
+    /**
+     * 查询指定类型的最新一条记录
+     */
+    GameEntity findByDoConut(String type,Integer doCount);
 }

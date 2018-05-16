@@ -1,5 +1,6 @@
 package com.money.game.business.entity;
 
+import com.money.game.basic.component.ext.hibernate.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -21,7 +22,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class SmsSendEntity implements Serializable {
+public class SmsSendEntity extends UUID implements Serializable {
 
     private static final long serialVersionUID = -9113750421676010255L;
     /**

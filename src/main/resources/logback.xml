@@ -65,18 +65,18 @@
         </encoder>
     </appender>
 
-    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+    <logger name="org.hibernate.SQL" level="INFO" additivity="false">
         <appender-ref ref="sqllog"/>
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="feign" level="DEBUG" additivity="false">
+    <logger name="feign" level="INFO" additivity="false">
         <appender-ref ref="httplog"/>
         <appender-ref ref="STDOUT"/>
     </logger>
 
 
-    <logger name="com.guohuai" level="DEBUG" additivity="false">
+    <logger name="com.guohuai" level="INFO" additivity="false">
         <appender-ref ref="file"/>
         <appender-ref ref="STDOUT"/>
     </logger>

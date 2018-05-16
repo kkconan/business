@@ -23,6 +23,10 @@ public interface GameDao extends JpaRepository<GameEntity, String>, JpaSpecifica
     @Query(value = "select * from T_GAME where   type = ?1  order by createTime desc limit 1 ", nativeQuery = true)
     GameEntity findLastRecordByType(String type);
 
+    @Query(value = "select * from T_GAME where   type = ?1 and doCount <= ?2 order by startTime asc limit 1 ", nativeQuery = true)
+    GameEntity findByDoConut(String type ,Integer doCount);
+
+
 }
 
 

@@ -82,6 +82,11 @@ public class GameEntity extends UUID implements Serializable{
      */
     private String result;
 
+    /**
+     * 已处理到合约的次数
+     */
+    private Integer doCount = 0;
+
     private Timestamp updateTime;
 
     private Timestamp createTime;

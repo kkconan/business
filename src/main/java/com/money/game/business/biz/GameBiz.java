@@ -43,10 +43,10 @@ public class GameBiz {
     @Value("${huobi.pro.api.url:https://api.huobi.pro/market/history/kline}")
     private String proMarketApi;
 
-    @Value("${game.time.frequency:5}")
-    private Integer TimeFrequency;
+    @Value("${game.time.frequency:30}")
+    private Integer timeFrequency;
 
-    @Value("${game.play.frequency:3}")
+    @Value("${game.play.frequency:10}")
     private Integer playFrequency;
 
 
@@ -69,6 +69,12 @@ public class GameBiz {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private SmartContractBiz smartContractBiz;
+
+    /**
+     * 游戏开始
+     */
     public void startDigitalCashGame() {
         GameEntity gameEntity = gameService.findByStartTime(DateUtil.getCurrDateMmss(), DictEnum.GAME_STATUS_01.getCode());
         if (gameEntity != null) {
@@ -77,10 +83,12 @@ public class GameBiz {
                 log.info("game start... id={}", gameEntity.getOid());
                 gameEntity.setStatus(DictEnum.GAME_STATUS_02.getCode());
                 gameEntity.setOpenAmount(marketDetailVo.getOpen());
+                smartContractBiz.gameStart(gameEntity, marketDetailVo.getOpen());
                 gameService.save(gameEntity);
             }
         }
     }
+
 
     public void endDigitalCashGame() {
         Date currentDate = DateUtil.getCurrDateMmss();
@@ -117,6 +125,10 @@ public class GameBiz {
                     } else {
                         gameEntity.setResult(DictEnum.GAME_PROPERTIES_LOSE.getCode());
                     }
+
+                    //游戏结束
+                    smartContractBiz.gameEnd(gameEntity, marketDetailVo.getOpen());
+
                     gameService.save(gameEntity);
                     //处理结果
                     this.calcResult(gameEntity);
@@ -128,11 +140,11 @@ public class GameBiz {
 
 
     /**
-     *
+     * 初始化游戏次数
      */
     public void initDigitalCashGame() {
         //一天的总次数
-        int time = 24 * 60 / TimeFrequency;
+        int time = 24 * 60 / timeFrequency;
         Date tomorrow = DateUtil.addDay(DateUtil.getCurrDate(), 0);
         Date initDate = DateUtil.getTodayZero(tomorrow);
         Date startTime;
@@ -145,7 +157,7 @@ public class GameBiz {
         } else {
             for (int i = 0; i < time; i++) {
                 count = i + 1;
-                startTime = DateUtil.addMinute(initDate, i * TimeFrequency);
+                startTime = DateUtil.addMinute(initDate, i * timeFrequency);
                 endTime = DateUtil.addMinute(startTime, playFrequency);
                 code = DateUtil.getCurrentDate() + count;
                 GameEntity gameEntity = gameService.saveDigitalCashGame(startTime, endTime, code, count);
@@ -153,6 +165,17 @@ public class GameBiz {
             }
         }
     }
+
+    public void createSmartGame() {
+        GameEntity gameEntity = gameService.findByDoConut(DictEnum.GAME_TYPE_02.getCode(), 0);
+        if (gameEntity != null) {
+            //创建合约游戏
+            smartContractBiz.createGame(gameEntity);
+            gameEntity.setDoCount(gameEntity.getDoCount() + 1);
+            gameService.save(gameEntity);
+        }
+    }
+
 
     public ResponseData findAllEffectGame(QueryGameDto dto) {
 
